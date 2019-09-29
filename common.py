@@ -46,19 +46,20 @@ class Mysql():
         result = cursor.fetchall()
         return result
 
-    def insert(self, query, params=()):
-        cursor = self.conn.cursor()
-        result = cursor.execute(query, params)
-        return result
+    def insert(self, query, params=(), autocommit=True):
+        return self.__modify(query, params, autocommit)
 
-    def update(self, query, params=()):
-        cursor = self.conn.cursor()
-        result = cursor.execute(query, params)
-        return result
+    def update(self, query, params=(), autocommit=True):
+        return self.__modify(query, params, autocommit)
 
-    def delete(self, query, params=()):
+    def delete(self, query, params=(), autocommit=True):
+        return self.__modify(query, params, autocommit)
+
+    def __modify(self, query, params=(), autocommit=True):
         cursor = self.conn.cursor()
         result = cursor.execute(query, params)
+        if autocommit:
+            self.commit()
         return result
 
     def commit(self):
